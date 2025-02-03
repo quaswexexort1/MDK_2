@@ -74,6 +74,7 @@ public class Rational
 
             // Вывод созданных дробей
             Console.WriteLine($"r1: {r1}, r2: {r2}");
+            Console.WriteLine();
 
             // Выполнение операций и вывод результатов.
             Console.WriteLine($"{r1} + {r2} = {Rational.Add(r1, r2)}");
@@ -81,14 +82,17 @@ public class Rational
             Console.WriteLine($"{r1} * {r2} = {Rational.Mul(r1, r2)}");
             Console.WriteLine($"{r1} / {r2} = {Rational.Div(r1, r2)}");
 
+            Console.WriteLine();
             // Выполнение сравнений
             Console.WriteLine($"{r1} == {r2} : {Rational.Equal(r1, r2)}");
             Console.WriteLine($"{r1} > {r2} : {Rational.Greater(r1, r2)}");
             Console.WriteLine($"{r1} < {r2} : {Rational.Less(r1, r2)}");
+            Console.WriteLine();
 
             // Сокращение дроби
             Rational r3 = new Rational(2, 4);
             Console.WriteLine($"{r3} = {r3.ToString()}");
+            Console.WriteLine();
 
             // Отрицательная дробь
             Rational r4 = new Rational(-1, 3);

@@ -81,8 +81,8 @@ public class Rational
             Console.WriteLine($"{r1} - {r2} = {Rational.Sub(r1, r2)}");
             Console.WriteLine($"{r1} * {r2} = {Rational.Mul(r1, r2)}");
             Console.WriteLine($"{r1} / {r2} = {Rational.Div(r1, r2)}");
-
             Console.WriteLine();
+
             // Выполнение сравнений
             Console.WriteLine($"{r1} == {r2} : {Rational.Equal(r1, r2)}");
             Console.WriteLine($"{r1} > {r2} : {Rational.Greater(r1, r2)}");

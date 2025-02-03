@@ -1,100 +1,90 @@
-﻿using System.Diagnostics.Metrics;
-using System.Reflection;
-
-Rational rational1 = new Rational { Value = 1 };
-Rational rational2 = new Rational { Value = 2 };
-
-Rational sum1 = rational1.Add(rational2);
-Console.WriteLine(sum1.Value);
-Console.WriteLine();
-
-Rational sub1 = rational1.Sub(rational2);
-Console.WriteLine(sub1.Value);
-Console.WriteLine();
-
-Rational mul1 = rational1.Mul(rational2);
-Console.WriteLine(mul1.Value);
-Console.WriteLine();
-
-Rational div1 = rational1.Div(rational2);
-Console.WriteLine(mul1.Value);
-Console.WriteLine();
-
-
-
-
-
-bool greate = rational1 > rational2;
-Console.WriteLine(greate);
-Console.WriteLine();
-
-bool less  = rational1 < rational2;
-Console.WriteLine(less);
-Console.WriteLine();
-
-bool equal = rational1 == rational2;
-Console.WriteLine(equal);
-
-
-class Rational
+public class Rational
 {
-    public int Value { get; set; }
 
-    public Rational Add(Rational c)
+    public int Numerator { get; } // Хранение числителя дроби
+    public int Denominator { get; } // Хранение знаменателя дроби
+
+    public Rational (int numerator, int denominator)
     {
-        return new Rational { Value = this.Value + c.Value };
+        Numerator = numerator;
+        Denominator = denominator;
+        Reduce(); // Reduce для сокращения дроби при создании
     }
 
-    public Rational Sub(Rational c)
+    private void Reduce()
     {
-        return new Rational { Value = this.Value = c.Value };
+        int nod = NOD(Math.Abs(Numerator), Math.Abs(Denominator));  //NOD - Наибольшее общее делимое
+        // Деление числителя и знаменателя на их НОД для сокращения.
+        Numerator /= nod;
+        Denominator /= nod;
+
+        if (Denominator < 0) // Гарантия, что знаменатель всегда будет положительным.
+        {
+            Numerator *= -1;
+            Denominator *= -1;
+        }
     }
 
-    public Rational Mul(Rational c)
+    private int NOD(int a, int b) //для вычисления наибольшего общего делителя(НОД) двух чисел.
     {
-        return new Rational { Value = this.Value * c.Value };
-    }
-
-    public Rational Div(Rational c)
-    {
-        return new Rational { Value = this.Value / c.Value };
-    }
-
-
-    public static bool operator >(Rational c1, Rational c2)
-    {
-        return c1.Value > c2.Value;
-    }
-
-    public static bool operator <(Rational c1, Rational c2)
-    {
-        return c1.Value > c2.Value;
-    }
-
-
-    public static bool operator !=(Rational c1, Rational c2)
-    {
-        return c1.Value == c2.Value;
-    }
-
-    public static bool operator ==(Rational c1, Rational c2)
-    {
-        return c1.Value == c2.Value;
+        while (b != 0)
+        {
+            int temp = b;
+            b = a % b;
+            a = temp;
+        }
+        return a;
     }
 
 
+    public static Rational Add(Rational r1, Rational r2) 
+        => new Rational(r1.Numerator * r2.Denominator + r2.Numerator * r1.Denominator, r1.Denominator * r2.Denominator);
+
+    public static Rational Sub(Rational r1, Rational r2)
+        => new Rational(r1.Numerator * r2.Denominator - r2.Numerator * r1.Denominator, r1.Denominator * r2.Denominator);
+
+    public static Rational Mul(Rational r1, Rational r2)
+          => new Rational(r1.Numerator * r2.Numerator, r1.Denominator * r2.Denominator);
+
+    public static Rational Div(Rational r1, Rational r2)
+        => new Rational(r1.Numerator * r2.Denominator, r1.Denominator * r2.Numerator);
+    
 
 
-    public static bool operator true(Rational c1)
+    public static bool Equal(Rational r1, Rational r2) // сравнение "Равно"
+        => r1.Numerator == r2.Numerator && r1.Denominator == r2.Denominator;
+
+    public static bool Greater(Rational r1, Rational r2) // сравнение "Больше"
+      => (double)r1.Numerator / r1.Denominator > (double)r2.Numerator / r2.Denominator;
+
+    public static bool Less(Rational r1, Rational r2) // сравнение "Меньше"
+       => (double)r1.Numerator / r1.Denominator < (double)r2.Numerator / r2.Denominator;
+
+    public override string ToString()
+      => $"{Numerator}/{Denominator}";
+    
+        
+    public class Program
     {
-        return c1.Value != 0;
-    }
-    public static bool operator false(Rational c1)
-    {
-        return c1.Value == 0;
-    }
-    public static bool operator !(Rational c1)
-    {
-        return c1.Value == 0;
-    }
-}
+        public static void Main(string[] args)
+        {
+            Rational r1 = new Rational(1, 2);
+            Rational r2 = new Rational(1, 4);
+
+            Console.WriteLine($"r1: {r1}, r2: {r2}");
+
+            Console.WriteLine($"{r1} + {r2} = {Rational.Add(r1, r2)}");
+            Console.WriteLine($"{r1} - {r2} = {Rational.Sub(r1, r2)}");
+            Console.WriteLine($"{r1} * {r2} = {Rational.Mul(r1, r2)}");
+            Console.WriteLine($"{r1} / {r2} = {Rational.Div(r1, r2)}");
+
+            Console.WriteLine($"{r1} == {r2} : {Rational.Equal(r1, r2)}");
+            Console.WriteLine($"{r1} > {r2} : {Rational.Greater(r1, r2)}");
+            Console.WriteLine($"{r1} < {r2} : {Rational.Less(r1, r2)}");
+
+            Rational r3 = new Rational(2, 4);
+            Console.WriteLine($"{r3} = {r3.ToString()}");
+            Rational r4 = new Rational(-1, 3);
+            Console.WriteLine($"{r4} = {r4.ToString()}");
+        }
+     }

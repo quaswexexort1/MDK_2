@@ -1,3 +1,38 @@
+Rational r1 = new Rational(1, 2);
+Rational r2 = new Rational(1, 4);
+
+// Вывод созданных дробей
+Console.WriteLine($"r1: {r1}, r2: {r2}");
+Console.WriteLine();
+
+// Выполнение операций и вывод результатов.
+Console.WriteLine($"{r1} + {r2} = {Rational.Add(r1, r2)}");
+Console.WriteLine($"{r1} - {r2} = {Rational.Sub(r1, r2)}");
+Console.WriteLine($"{r1} * {r2} = {Rational.Mul(r1, r2)}");
+Console.WriteLine($"{r1} / {r2} = {Rational.Div(r1, r2)}");
+Console.WriteLine();
+
+// Выполнение сравнений
+Console.WriteLine($"{r1} == {r2} : {Rational.Equal(r1, r2)}");
+Console.WriteLine($"{r1} > {r2} : {Rational.Greater(r1, r2)}");
+Console.WriteLine($"{r1} < {r2} : {Rational.Less(r1, r2)}");
+Console.WriteLine();
+
+// Сокращение дроби
+Rational r3 = new Rational(2, 4);
+Console.WriteLine($"{r3} = {r3.ToString()}");
+Console.WriteLine();
+
+// Отрицательная дробь
+Rational r4 = new Rational(-1, 3);
+Console.WriteLine($"{r4} = {r4.ToString()}");
+
+
+
+
+
+
+
 public class Rational
 {
 
@@ -65,37 +100,4 @@ public class Rational
       => $"{Numerator}/{Denominator}";
 }
 
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            Rational r1 = new Rational(1, 2);
-            Rational r2 = new Rational(1, 4);
 
-            // Вывод созданных дробей
-            Console.WriteLine($"r1: {r1}, r2: {r2}");
-            Console.WriteLine();
-
-            // Выполнение операций и вывод результатов.
-            Console.WriteLine($"{r1} + {r2} = {Rational.Add(r1, r2)}");
-            Console.WriteLine($"{r1} - {r2} = {Rational.Sub(r1, r2)}");
-            Console.WriteLine($"{r1} * {r2} = {Rational.Mul(r1, r2)}");
-            Console.WriteLine($"{r1} / {r2} = {Rational.Div(r1, r2)}");
-            Console.WriteLine();
-
-            // Выполнение сравнений
-            Console.WriteLine($"{r1} == {r2} : {Rational.Equal(r1, r2)}");
-            Console.WriteLine($"{r1} > {r2} : {Rational.Greater(r1, r2)}");
-            Console.WriteLine($"{r1} < {r2} : {Rational.Less(r1, r2)}");
-            Console.WriteLine();
-
-            // Сокращение дроби
-            Rational r3 = new Rational(2, 4);
-            Console.WriteLine($"{r3} = {r3.ToString()}");
-            Console.WriteLine();
-
-            // Отрицательная дробь
-            Rational r4 = new Rational(-1, 3);
-            Console.WriteLine($"{r4} = {r4.ToString()}");
-        }
-    }

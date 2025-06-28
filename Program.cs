@@ -1,66 +1,32 @@
-Rational r1 = new Rational(1, 2);
-Rational r2 = new Rational(1, 4);
-
-// Вывод созданных дробей
-Console.WriteLine($"r1: {r1}, r2: {r2}");
-Console.WriteLine();
-
-// Выполнение операций и вывод результатов.
-Console.WriteLine($"{r1} + {r2} = {Rational.Add(r1, r2)}");
-Console.WriteLine($"{r1} - {r2} = {Rational.Sub(r1, r2)}");
-Console.WriteLine($"{r1} * {r2} = {Rational.Mul(r1, r2)}");
-Console.WriteLine($"{r1} / {r2} = {Rational.Div(r1, r2)}");
-Console.WriteLine();
-
-// Выполнение сравнений
-Console.WriteLine($"{r1} == {r2} : {Rational.Equal(r1, r2)}");
-Console.WriteLine($"{r1} > {r2} : {Rational.Greater(r1, r2)}");
-Console.WriteLine($"{r1} < {r2} : {Rational.Less(r1, r2)}");
-Console.WriteLine();
-
-// Сокращение дроби
-Rational r3 = new Rational(2, 4);
-Console.WriteLine($"{r3} = {r3.ToString()}");
-Console.WriteLine();
-
-// Отрицательная дробь
-Rational r4 = new Rational(-1, 3);
-Console.WriteLine($"{r4} = {r4.ToString()}");
-
-
-
-
-
-
-
 public class Rational
 {
-
-    public int Numerator { get; set; } // Хранение числителя дроби
-    public int Denominator { get; set; } // Хранение знаменателя дроби
+    public int Numerator { get; private set; }
+    public int Denominator { get; private set; }
 
     public Rational(int numerator, int denominator)
     {
+        if (denominator == 0)
+            throw new ArgumentException("Знаменатель не может быть равен нулю.");
+            
         Numerator = numerator;
         Denominator = denominator;
-        Reduce(); // Reduce для сокращения дроби при создании
+        Reduce();
     }
 
     private void Reduce()
     {
-        int nod = NOD(Math.Abs(Numerator), Math.Abs(Denominator));  //NOD - Наибольшее общее делимое
-        // Деление числителя и знаменателя на их НОД для сокращения.
-        Numerator /= nod;
-        Denominator /= nod;
+        int gcd = GCD(Math.Abs(Numerator), Math.Abs(Denominator));
+        Numerator /= gcd;
+        Denominator /= gcd;
 
-        if (Denominator < 0) // Гарантия, что знаменатель всегда будет положительным.
+        if (Denominator < 0)
         {
-            Numerator *= -1;
-            Denominator *= -1;
+            Numerator = -Numerator;
+            Denominator = -Denominator;
         }
     }
 
-    private int NOD(int a, int b) //для вычисления наибольшего общего делителя(НОД) двух чисел.
+    private int GCD(int a, int b)
     {
         while (b != 0)
         {
@@ -71,33 +37,50 @@ public class Rational
         return a;
     }
 
+    // Перегрузка операторов
+    public static Rational operator +(Rational r1, Rational r2)
+        => new Rational(
+            r1.Numerator * r2.Denominator + r2.Numerator * r1.Denominator,
+            r1.Denominator * r2.Denominator);
 
-    public static Rational Add(Rational r1, Rational r2)
-        => new Rational(r1.Numerator * r2.Denominator + r2.Numerator * r1.Denominator, r1.Denominator * r2.Denominator);
+    public static Rational operator -(Rational r1, Rational r2)
+        => new Rational(
+            r1.Numerator * r2.Denominator - r2.Numerator * r1.Denominator,
+            r1.Denominator * r2.Denominator);
 
-    public static Rational Sub(Rational r1, Rational r2)
-        => new Rational(r1.Numerator * r2.Denominator - r2.Numerator * r1.Denominator, r1.Denominator * r2.Denominator);
+    public static Rational operator *(Rational r1, Rational r2)
+        => new Rational(
+            r1.Numerator * r2.Numerator,
+            r1.Denominator * r2.Denominator);
 
-    public static Rational Mul(Rational r1, Rational r2)
-          => new Rational(r1.Numerator * r2.Numerator, r1.Denominator * r2.Denominator);
+    public static Rational operator /(Rational r1, Rational r2)
+    {
+        if (r2.Numerator == 0)
+            throw new DivideByZeroException("Деление на ноль невозможно.");
+        return new Rational(
+            r1.Numerator * r2.Denominator,
+            r1.Denominator * r2.Numerator);
+    }
 
-    public static Rational Div(Rational r1, Rational r2)
-        => new Rational(r1.Numerator * r2.Denominator, r1.Denominator * r2.Numerator);
-
-
-
-    public static bool Equal(Rational r1, Rational r2) // сравнение "Равно"
+    // Операторы сравнения
+    public static bool operator ==(Rational r1, Rational r2)
         => r1.Numerator == r2.Numerator && r1.Denominator == r2.Denominator;
 
-    public static bool Greater(Rational r1, Rational r2) // сравнение "Больше"
-      => (double)r1.Numerator / r1.Denominator > (double)r2.Numerator / r2.Denominator;
+    public static bool operator !=(Rational r1, Rational r2)
+        => !(r1 == r2);
 
-    public static bool Less(Rational r1, Rational r2) // сравнение "Меньше"
-       => (double)r1.Numerator / r1.Denominator < (double)r2.Numerator / r2.Denominator;
+    public static bool operator >(Rational r1, Rational r2)
+        => r1.Numerator * r2.Denominator > r2.Numerator * r1.Denominator;
 
-    // Возвращает строку в формате "числитель/знаменатель".
+    public static bool operator <(Rational r1, Rational r2)
+        => r1.Numerator * r2.Denominator < r2.Numerator * r1.Denominator;
+
+    public override bool Equals(object obj)
+        => obj is Rational other && this == other;
+
+    public override int GetHashCode()
+        => HashCode.Combine(Numerator, Denominator);
+
     public override string ToString()
-      => $"{Numerator}/{Denominator}";
+        => $"{Numerator}/{Denominator}";
 }
-
-
